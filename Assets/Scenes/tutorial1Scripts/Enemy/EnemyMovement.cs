@@ -8,8 +8,8 @@ public class EnemyMovement : MonoBehaviour
 {
     
     private NavMeshAgent agent;
-    private float changeRouteTime=0.1f;
-    public GameObject player;
+    public float changeRouteTime=0.1f;
+    [HideInInspector] public GameObject player;
     private bool isEnabled=true;
     private Animator enemyAnimator;
     private string isMovingParameter = "isMoving";
