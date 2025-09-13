@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : PoolableObject
+public class Enemy : PoolableObject,IDamagable,ISetupable
 {
     public NavMeshAgent agent;
     public EnemyMovement movement;
     public ScriptableEnemyObject scriptableEnemyObject;
-
-    private float Health =100.0f;
+    public AttackRadius attackRadius;
+    public Animator enemyAnimator;
+    [SerializeField]private float health =100.0f;
+    private string attackTrigger = "attack";
 
     public virtual void OnEnable()
     {
@@ -19,7 +21,7 @@ public class Enemy : PoolableObject
         agent.enabled= false;
     }
 
-    public virtual void SetupAgent()
+    public void SetupAgent()
     {
         agent.acceleration = scriptableEnemyObject.accelaration;
         agent.angularSpeed = scriptableEnemyObject.angularSpeed;
@@ -32,7 +34,36 @@ public class Enemy : PoolableObject
         agent.speed = scriptableEnemyObject.speed;
         agent.stoppingDistance= scriptableEnemyObject.stoppingDistance;
         movement.changeRouteTime = scriptableEnemyObject.aIUpdateInterval;
-        Health = scriptableEnemyObject.health;
+        health = scriptableEnemyObject.health;
     }
 
+
+    private void Awake()
+    {
+        attackRadius.setAttackAnimation += SetAttackAnimation;
+    }
+   
+
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void SetAttackAnimation(IDamagable damagable)
+    {
+        enemyAnimator.SetTrigger(attackTrigger);
+        Vector3 direction = damagable.GetTransform().position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        transform.rotation = lookRotation;
+    }
+  
 }

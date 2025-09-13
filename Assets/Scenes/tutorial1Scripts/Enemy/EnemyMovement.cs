@@ -45,7 +45,7 @@ public class EnemyMovement : MonoBehaviour
         while (isEnabled)
         {
             agent.SetDestination(player.transform.position);
-            enemyAnimator.SetBool(isMovingParameter, agent.velocity.magnitude > 0.01f);
+            enemyAnimator.SetBool(isMovingParameter, agent.velocity.magnitude > 0.1f);
             yield return new WaitForSeconds(changeRouteTime);
         }
     }
