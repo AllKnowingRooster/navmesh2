@@ -17,8 +17,8 @@ TagManager:
   - PlayerAttackRadius
   - Enemies
   - EnemiesAttackRadius
-  - 
-  - 
+  - EnemiesRangedAttackRadius
+  - EnemyProjectile
   - 
   - 
   - 

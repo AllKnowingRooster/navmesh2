@@ -14,7 +14,7 @@ public enum SpawnMethod
 public class EnemyManager : MonoBehaviour
 {
 
-    private int maxEnemies = 5;
+    private int maxEnemies = 1;
     private float spawnInterval = 1.5f;
     private NavMeshTriangulation triangulation;
     private Dictionary<int,Pool> poolDict = new Dictionary<int,Pool>();

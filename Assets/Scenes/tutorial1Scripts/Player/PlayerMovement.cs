@@ -47,6 +47,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        playerAnimator.SetBool(isMovingParameter,agent.velocity.magnitude > 0.1f);
+        playerAnimator.SetBool(isMovingParameter,agent.velocity.magnitude > 0.01f);
     }
 }

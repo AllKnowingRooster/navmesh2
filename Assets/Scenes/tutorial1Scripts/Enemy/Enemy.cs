@@ -8,7 +8,7 @@ public class Enemy : PoolableObject,IDamagable,ISetupable
     public ScriptableEnemyObject scriptableEnemyObject;
     public AttackRadius attackRadius;
     public Animator enemyAnimator;
-    [SerializeField]private float health =100.0f;
+    [SerializeField] private float health =100.0f;
     private string attackTrigger = "attack";
 
     public virtual void OnEnable()

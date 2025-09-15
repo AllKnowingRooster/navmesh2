@@ -1,23 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class AttackRadius : MonoBehaviour
 {
-    private List<IDamagable> listDamagable = new List<IDamagable>();
-    private float attackDelay = 0.8f;
+    [SerializeField] protected List<IDamagable> listDamagable = new List<IDamagable>();
+    protected float attackDelay = 0.8f;
     private Coroutine attackCoroutine;
     public delegate void AttackAnimation(IDamagable damagable);
     public AttackAnimation setAttackAnimation;
     public float damage = 10.0f;
     public NavMeshAgent agent;
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         IDamagable damagable = other.GetComponent<IDamagable>();
-        Debug.Log(damagable);
         if (damagable!=null)
         {
             listDamagable.Add(damagable);
@@ -28,7 +27,7 @@ public class AttackRadius : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    protected void OnTriggerExit(Collider other)
     {
         IDamagable damagable = other.GetComponent<IDamagable>();
         if (damagable!=null)
@@ -37,17 +36,18 @@ public class AttackRadius : MonoBehaviour
             if (listDamagable.Count==0)
             {
                 StopCoroutine(attackCoroutine);
-                attackCoroutine= null;
+                attackCoroutine=null;
+                agent.isStopped = false;
             }
         }
     }
 
-    private IEnumerator Attack()
+    protected virtual IEnumerator Attack()
     {
         WaitForSeconds time=new WaitForSeconds(attackDelay);
         float maxDistance = float.MaxValue;
         IDamagable closestDamagable = null;
-        while (listDamagable.Count>0 )
+        while (listDamagable.Count>0)
         {
             for (int i = 0; i < listDamagable.Count; i++)
             {
@@ -58,23 +58,24 @@ public class AttackRadius : MonoBehaviour
                     closestDamagable = listDamagable[i];
                 }
             }
-
             if (closestDamagable != null)
             {
                 setAttackAnimation.Invoke(closestDamagable);
+                agent.isStopped= true;
                 yield return time;
                 closestDamagable.TakeDamage(damage);
+                
             }
             yield return null;
             maxDistance = float.MaxValue;
             closestDamagable=null;
             listDamagable.RemoveAll(RemoveDisabledDamagable);
         }
-
-
+        attackCoroutine = null;
+        agent.isStopped = false;
     }
 
-    private bool RemoveDisabledDamagable(IDamagable damagable)
+    protected bool RemoveDisabledDamagable(IDamagable damagable)
     {
         return !damagable.GetTransform().gameObject.activeSelf;
     }
